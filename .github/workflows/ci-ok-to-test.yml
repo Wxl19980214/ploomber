@@ -1,6 +1,5 @@
 name: CI ok-to-test Linux
 on:
-  push
   pull_request
 jobs:
   unit-tests:
