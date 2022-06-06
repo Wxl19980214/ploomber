@@ -93,7 +93,7 @@ jobs:
 
     - run: echo "Unit tests... success! ;-)"
 
-integration-tests:
+name: integration-tests
 on:
   pull_request:
   repository_dispatch:
