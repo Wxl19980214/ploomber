@@ -35,3 +35,6 @@ jobs:
         commands: ok-to-test
         named-args: true
         permission: write
+    
+    - run: |
+        echo "THIS IS tests... success! ;-)"
