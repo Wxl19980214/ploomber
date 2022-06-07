@@ -2,6 +2,7 @@
 name: Ok To Test
 
 on:
+  push:
   issue_comment:
     types: [created]
 
