@@ -10,6 +10,7 @@ jobs:
   # Branch-based pull request
   integration-trusted-linux:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
@@ -27,7 +28,6 @@ jobs:
         ports:
           - 5432:5432
 
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     steps:
 
     - name: Branch based PR checkout
@@ -102,6 +102,11 @@ jobs:
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork-linux:
     runs-on: ubuntu-latest
+    if: 
+      github.event_name == 'repository_dispatch' &&
+      github.event.client_payload.slash_command.sha != '' &&
+      contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.sha)
+
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
@@ -118,10 +123,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-    if: 
-      github.event_name == 'repository_dispatch' &&
-      github.event.client_payload.slash_command.sha != '' &&
-      contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.sha)
+
     steps:
 
     # Check out merge commit
