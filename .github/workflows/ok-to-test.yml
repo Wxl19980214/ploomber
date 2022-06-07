@@ -2,7 +2,6 @@
 name: Ok To Test
 
 on:
-  push:
   issue_comment:
     types: [created]
 
@@ -12,7 +11,7 @@ jobs:
     steps:
     - run: |
         echo "THIS IS tests... success! ;-)"
-        
+
   ok-to-test:
     runs-on: ubuntu-latest
     # Only run for PRs, not issue comments
