@@ -7,6 +7,12 @@ on:
     types: [created]
 
 jobs:
+  print-jobs:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "THIS IS tests... success! ;-)"
+        
   ok-to-test:
     runs-on: ubuntu-latest
     # Only run for PRs, not issue comments
@@ -35,6 +41,3 @@ jobs:
         commands: ok-to-test
         named-args: true
         permission: write
-    
-    - run: |
-        echo "THIS IS tests... success! ;-)"
