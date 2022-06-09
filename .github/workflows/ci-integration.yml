@@ -1,6 +1,8 @@
 # Run secret-dependent integration tests only after /ok-to-test approval
 on:
   pull_request:
+  schedule:
+    - cron: '*/5 * * * *'
   repository_dispatch:
     types: [ok-to-test-command]
 
@@ -10,7 +12,7 @@ jobs:
   # Branch-based pull request
   integration-trusted-linux:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    if: (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || github.event_name == 'schedule'
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
@@ -95,8 +97,9 @@ jobs:
         pytest src/ploomber --doctest-modules --ignore src/ploomber/resources
         unset PY_IGNORE_IMPORTMISMATCH
 
-        # unit tests
         pytest tests/cli/test_cloud_execution.py --cov=ploomber 
+        pytest tests/cloud --covploomber
+        pytest tests/telemetry --covploomber
         coveralls
 
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
@@ -194,8 +197,9 @@ jobs:
         pytest src/ploomber --doctest-modules --ignore src/ploomber/resources
         unset PY_IGNORE_IMPORTMISMATCH
 
-        # unit tests
         pytest tests/cli/test_cloud_execution.py --cov=ploomber 
+        pytest tests/cloud --covploomber
+        pytest tests/telemetry --covploomber
         coveralls
   
     - run: |
@@ -241,7 +245,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    if: (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || github.event_name == 'schedule'
     steps:
     - name: Start PostgreSQL
       run: |
@@ -321,6 +325,8 @@ jobs:
         eval "$(conda shell.bash hook)"
         conda activate conda-env
         pytest tests/cli/test_cloud_execution.py
+        pytest tests/cloud
+        pytest tests/telemetry
 
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork-macos:
@@ -414,6 +420,8 @@ jobs:
         eval "$(conda shell.bash hook)"
         conda activate conda-env
         pytest tests/cli/test_cloud_execution.py
+        pytest tests/cloud
+        pytest tests/telemetry
 
     - run: |
         echo "Integration tests... success! ;-)"
@@ -459,7 +467,7 @@ jobs:
       matrix:
         python-version: [3.7, 3.8, 3.9]
 
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    if: (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || github.event_name == 'schedule'
     steps:
 
     - name: Start PostgreSQL
@@ -540,6 +548,8 @@ jobs:
         eval "$(conda shell.bash hook)"
         conda activate conda-env
         pytest tests/cli/test_cloud_execution.py
+        pytest tests/cloud
+        pytest tests/telemetry
 
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork-windows:
@@ -635,6 +645,8 @@ jobs:
         eval "$(conda shell.bash hook)"
         conda activate conda-env
         pytest tests/cli/test_cloud_execution.py
+        pytest tests/cloud
+        pytest tests/telemetry
 
     - run: |
         echo "Integration tests... success! ;-)"
