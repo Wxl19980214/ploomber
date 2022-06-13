@@ -22,7 +22,9 @@ def check_pygraphviz_installed():
 
 
 def check_if_windows_python_3_10():
-    return False
+    if system() == 'Windows' and sys.version_info >= (3, 10):
+        return True
+    return True
 
 
 def choose_backend(backend):
