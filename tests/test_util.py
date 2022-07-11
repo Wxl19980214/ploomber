@@ -15,6 +15,7 @@ def test_add_to_sys_path():
         assert path in sys.path
 
     assert path not in sys.path
+    assert 1 == 2
 
 
 def test_add_to_sys_path_with_chdir(tmp_directory):
